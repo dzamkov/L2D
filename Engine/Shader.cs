@@ -112,6 +112,14 @@ namespace L2D.Engine
         }
 
         /// <summary>
+        /// Deletes the shader.
+        /// </summary>
+        public void Delete()
+        {
+            GL.DeleteShader(this.Program);
+        }
+
+        /// <summary>
         /// Draws a shape that includes the entire viewport.
         /// </summary>
         public static void DrawQuad()

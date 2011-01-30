@@ -15,6 +15,17 @@ namespace L2D.Engine
         }
 
         /// <summary>
+        /// Gets all the components in the entity.
+        /// </summary>
+        public IEnumerable<Component> Components
+        {
+            get
+            {
+                return this._Components;
+            }
+        }
+
+        /// <summary>
         /// Gets a component of the specified type from the entity, if the entity defines it.
         /// </summary>
         public T GetComponent<T>()
@@ -47,6 +58,18 @@ namespace L2D.Engine
             foreach (Component c in this._Components)
             {
                 c.OnLink(this);
+            }
+        }
+
+        /// <summary>
+        /// Removes the entity from all associated worlds.
+        /// </summary>
+        public void Remove()
+        {
+            foreach (Component c in this._Components)
+            {
+                c._Removed = true;
+                c.OnDispose(this);
             }
         }
 

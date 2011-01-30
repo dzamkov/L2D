@@ -49,6 +49,8 @@
     <Compile Include="Shader.cs" />
     <Compile Include="Texture.cs" />
     <Compile Include="Vector.cs" />
+    <Compile Include="Visual.cs" />
+    <Compile Include="World.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="OpenTK, Version=1.0.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">

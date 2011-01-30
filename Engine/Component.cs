@@ -10,11 +10,32 @@ namespace L2D.Engine
     public class Component
     {
         /// <summary>
+        /// Gets if the component is to be removed. If this is true the component may no longer be used.
+        /// </summary>
+        public bool Removed
+        {
+            get
+            {
+                return this._Removed;
+            }
+        }
+
+        /// <summary>
         /// Called when a component is linked to an entity.
         /// </summary>
         internal protected virtual void OnLink(Entity Entity)
         {
 
         }
+
+        /// <summary>
+        /// Called when the component will no longer be needed.
+        /// </summary>
+        internal protected virtual void OnDispose(Entity Entity)
+        {
+
+        }
+
+        internal bool _Removed;
     }
 }
