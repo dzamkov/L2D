@@ -74,7 +74,7 @@ namespace L2D
 
             this._Atmosphere.Setup(this._Planet);
             this._Planet.SetUniform("EyePosition", eyepos);
-            this._Planet.SetUniform("SunDirection", Vector.Normalize(new Vector(1.0, 0.0, 0.3)));
+            this._Planet.SetUniform("SunDirection", Vector.Normalize(new Vector(1.0, 0.0, 1.0)));
             this._Planet.SetUniform("ProjectionInverse", ref total);
             this._Planet.SetUniform("NearDistance", (float)Near);
             this._Planet.SetUniform("FarDistance", (float)Far);
