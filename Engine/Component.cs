@@ -21,17 +21,9 @@ namespace L2D.Engine
         }
 
         /// <summary>
-        /// Called when a component is linked to an entity.
-        /// </summary>
-        internal protected virtual void OnLink(Entity Entity)
-        {
-
-        }
-
-        /// <summary>
         /// Called when the component will no longer be needed.
         /// </summary>
-        internal protected virtual void OnDispose(Entity Entity)
+        internal protected virtual void OnRemove(Entity Entity)
         {
 
         }

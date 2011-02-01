@@ -28,6 +28,13 @@ namespace L2D.Engine
             {
                 this._Atmosphere = avc;
             }
+
+            // Or a sun?
+            SunVisualComponent svc = Component as SunVisualComponent;
+            if (svc != null)
+            {
+                this._Sun = svc;
+            }
         }
 
         /// <summary>
@@ -35,20 +42,21 @@ namespace L2D.Engine
         /// </summary>
         public void Render(ref Matrix4 Proj, double Near, double Far, Vector EyePos, Vector EyeDir)
         {
+            if (this._Sun != null && this._Sun.Removed) this._Sun = null;
+            if (this._Atmosphere != null && this._Atmosphere.Removed) this._Atmosphere = null;
+
+
             // Render atmosphere
             if (this._Atmosphere != null)
             {
-                if (this._Atmosphere.Removed)
+                if (this._Sun != null)
                 {
-                    this._Atmosphere = null;
-                }
-                else
-                {
-                    this._Atmosphere.Render(ref Proj, Near, Far, EyePos, EyeDir);
+                    this._Atmosphere.Render(this._Sun.Sun.Direction, ref Proj, Near, Far, EyePos, EyeDir);
                 }
             }
         }
 
+        private SunVisualComponent _Sun;
         private AtmosphereVisualComponent _Atmosphere;
     }
 

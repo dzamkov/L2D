@@ -46,8 +46,11 @@
     <Compile Include="Component.cs" />
     <Compile Include="Entity.cs" />
     <Compile Include="Path.cs" />
+    <Compile Include="Player.cs" />
     <Compile Include="Shader.cs" />
+    <Compile Include="Sun.cs" />
     <Compile Include="Texture.cs" />
+    <Compile Include="Time.cs" />
     <Compile Include="Vector.cs" />
     <Compile Include="Visual.cs" />
     <Compile Include="World.cs" />

@@ -162,9 +162,7 @@ namespace L2D.Engine
         /// </summary>
         public static Entity MakeEntity(Path ShaderPath, AtmosphereOptions Options, AtmosphereQualityOptions QualityOptions)
         {
-            Entity e = new Entity();
-            e.LinkComponent(new AtmosphereVisualComponent(ShaderPath, Options, QualityOptions));
-            return e;
+            return Entity.WithComponent(new AtmosphereVisualComponent(ShaderPath, Options, QualityOptions));
         }
         
         /// <summary>
@@ -357,7 +355,7 @@ namespace L2D.Engine
     }
 
     /// <summary>
-    /// A component that renders an atmosphere.
+    /// A component that renders an atmosphere. Note that the atmosphere will not be illuminated at all if there is no sun.
     /// </summary>
     public class AtmosphereVisualComponent : VisualComponent
     {
@@ -369,28 +367,12 @@ namespace L2D.Engine
             Atmosphere.DefineConstants(Options, QualityOptions, pci);
             this._Main = Shader.Load(atmosphere["Planet.glsl"], pci);
             this._Radius = Options.RadiusGround;
-            this._SunDirection = Vector.Normalize(new Vector(1.0, 0.0, 0.1));
-        }
-
-        /// <summary>
-        /// Gets or sets the direction the sun is in in relation to the top of the planet. This vector MUST be normalized.
-        /// </summary>
-        public Vector SunDirection
-        {
-            get
-            {
-                return this._SunDirection;
-            }
-            set
-            {
-                this._SunDirection = value;
-            }
         }
 
         /// <summary>
         /// Renders the atmosphere when supplied the given information. Resets current matrix and sets DepthFunc.
         /// </summary>
-        public void Render(ref Matrix4 Proj, double Near, double Far, Vector EyePos, Vector EyeDir)
+        public void Render(Vector SunDirection, ref Matrix4 Proj, double Near, double Far, Vector EyePos, Vector EyeDir)
         {
             GL.DepthFunc(DepthFunction.Lequal);
             GL.LoadIdentity();
@@ -402,19 +384,18 @@ namespace L2D.Engine
 
             this._Atmosphere.Setup(this._Main);
             this._Main.SetUniform("EyePosition", eyepos);
-            this._Main.SetUniform("SunDirection", this._SunDirection);
+            this._Main.SetUniform("SunDirection", SunDirection);
             this._Main.SetUniform("ProjectionInverse", ref total);
             this._Main.SetUniform("NearDistance", (float)Near);
             this._Main.SetUniform("FarDistance", (float)Far);
             this._Main.DrawFull();
         }
 
-        protected internal override void OnDispose(Entity Entity)
+        protected internal override void OnRemove(Entity Entity)
         {
             this._Main.Delete();
         }
 
-        private Vector _SunDirection;
         private double _Radius;
         private PrecomputedAtmosphere _Atmosphere;
         private Shader _Main;

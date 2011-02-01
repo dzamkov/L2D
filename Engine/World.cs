@@ -11,6 +11,8 @@ namespace L2D.Engine
         public World()
         {
             this._VisualSystem = new VisualSystem();
+            this._TimeSystem = new TimeSystem();
+            this._Entities = new LinkedList<Entity>();
         }
 
         /// <summary>
@@ -25,11 +27,21 @@ namespace L2D.Engine
         }
 
         /// <summary>
-        /// Links and adds an entity to the world.
+        /// Gets the time subsystem.
+        /// </summary>
+        public TimeSystem Time
+        {
+            get
+            {
+                return this._TimeSystem;
+            }
+        }
+
+        /// <summary>
+        /// Adds an entity to the world.
         /// </summary>
         public void Add(Entity Entity)
         {
-            Entity.Link();
             foreach (Component c in Entity.Components)
             {
                 VisualComponent vc = c as VisualComponent;
@@ -37,10 +49,52 @@ namespace L2D.Engine
                 {
                     this._VisualSystem.Add(vc);
                 }
+
+                TimeComponent tc = c as TimeComponent;
+                if (tc != null)
+                {
+                    this._TimeSystem.Add(tc);
+                }
+            }
+
+            // Processing simple entities is a waste of time anyway.
+            if (!Entity.IsSimple(Entity))
+            {
+                this._Entities.AddLast(Entity);
             }
         }
 
+        /// <summary>
+        /// Updates all entities and systems by the given time in seconds.
+        /// </summary>
+        public void Update(double Time)
+        {
+            // Update systems
+            this._VisualSystem.Update(Time);
+            this._TimeSystem.Update(Time);
+
+            // Update entities
+            LinkedListNode<Entity> cur = this._Entities.First;
+            while (cur != null)
+            {
+                Entity ent = cur.Value;
+                if (ent.Removed)
+                {
+                    LinkedListNode<Entity> next = cur.Next;
+                    this._Entities.Remove(cur);
+                    cur = next;
+                }
+                else
+                {
+                    ent.OnUpdate(Time);
+                    cur = cur.Next;
+                }
+            }
+        }
+
+        private LinkedList<Entity> _Entities;
         private VisualSystem _VisualSystem;
+        private TimeSystem _TimeSystem;
     }
 
     /// <summary>
@@ -53,5 +107,13 @@ namespace L2D.Engine
         /// Adds a component to the system, the component is removed when its Removed property is set.
         /// </summary>
         public abstract void Add(T Component);
+
+        /// <summary>
+        /// Updates the system by the given time.
+        /// </summary>
+        public virtual void Update(double Time)
+        {
+
+        }
     }
 }

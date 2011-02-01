@@ -29,6 +29,11 @@ namespace L2D.Engine
             return new Vector3d(Vector.X, Vector.Y, Vector.Z);
         }
 
+        public static implicit operator Vector(Vector3d Vector)
+        {
+            return new Vector(Vector.X, Vector.Y, Vector.Z);
+        }
+
         public static explicit operator Vector3(Vector Vector)
         {
             return new Vector3((float)Vector.X, (float)Vector.Y, (float)Vector.Z);
@@ -133,6 +138,19 @@ namespace L2D.Engine
         public static Vector Reflect(Vector Incoming, Vector Normal)
         {
             return Incoming - Normal * (2 * Vector.Dot(Incoming, Normal) / Normal.SquareLength);
+        }
+
+        /// <summary>
+        /// Rotates the vector about an axis by the specified amount in radians.
+        /// </summary>
+        public Vector Rotate(Vector Axis, double Amount)
+        {
+            // HACK!!
+            Matrix4d rot = Matrix4d.Rotate(Axis, Amount);
+            Vector3d vec = this;
+            Vector3d ovec;
+            Vector3d.Transform(ref vec, ref rot, out ovec);
+            return ovec;
         }
 
         /// <summary>
