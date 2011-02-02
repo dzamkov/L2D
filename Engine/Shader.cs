@@ -190,12 +190,22 @@ namespace L2D.Engine
             BuildSource(File, vpce, vshadesource);
             GL.ShaderSource(vshade, vshadesource.ToString());
             GL.CompileShader(vshade);
-            vshadesource = null;
+
+            string vinfo = GL.GetShaderInfoLog(vshade);
 
             BuildSource(File, fpce, fshadesource);
             GL.ShaderSource(fshade, fshadesource.ToString());
             GL.CompileShader(fshade);
-            fshadesource = null;
+
+            string finfo = GL.GetShaderInfoLog(fshade);
+
+            if (false)
+            {
+                if (finfo.Length > 0 || vinfo.Length > 0)
+                {
+                    throw new Exception("Shader error");
+                }
+            }
 
             Shader shade = new Shader();
             shade.Program = GL.CreateProgram();

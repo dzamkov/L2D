@@ -21,17 +21,24 @@ namespace L2D
             Path resources = Path.ProcessFile.Parent.Parent.Parent.Parent["Resources"];
             Path shaders = resources["Shaders"];
 
+            this.VSync = VSyncMode.Off;
+
             this.WindowState = WindowState.Maximized;
 
-            this._World = new World();
+            Blur b = new Blur(shaders);
+            VisualSystem vissys = new VisualSystem(shaders);
+            TimeSystem tsys = new TimeSystem();
+            this._World = new World(vissys, tsys);
 
             // Make it midday
-            TimeSystem ts = this._World.Time;
-            ts.Offset = ts.SecondsPerDay / 2.0;
+            tsys.Offset = tsys.SecondsPerDay / 2.0;
 
             this._World.Add(Atmosphere.MakeEntity(shaders, AtmosphereOptions.DefaultEarth, AtmosphereQualityOptions.Default));
             this._World.Add(new Sun(37.3 * Math.PI / 180.0 /* LOL my house */));
             this._World.Add(this._Player = new Player());
+
+            vissys.Setup();
+            vissys.SetSize(this.Width, this.Height);
 
             this.Keyboard.KeyDown += delegate(object sender, KeyboardKeyEventArgs e)
             {
@@ -55,13 +62,15 @@ namespace L2D
             Matrix4 proj = Matrix4.CreatePerspectiveFieldOfView((float)Math.PI / 4.0f, (float)this.Width / (float)this.Height, 0.2f, 1000.0f);
 
             this._World.Visual.Render(ref proj, 0.2f, 1000.0f, this._Player.EyePosition, this._Player.LookDirection);
-            
 
+            
             this.SwapBuffers();
         }
 
         protected override void OnUpdateFrame(FrameEventArgs e)
         {
+            this.Title = "L2D(" + ((int)this.RenderFrequency).ToString() + ")";
+
             double updatetime = e.Time * this._TimeRate;
             this._World.Update(updatetime);
 
@@ -77,7 +86,7 @@ namespace L2D
                 Point center = new Point(screensize.Width / 2, screensize.Height / 2);
                 Cursor.Position = center;
 
-                double mouserate = 0.002;
+                double mouserate = 0.001;
                 deltaz += (double)(curpoint.X - center.X) * mouserate;
                 deltax += (double)(curpoint.Y - center.Y) * -mouserate;
             }
@@ -103,6 +112,7 @@ namespace L2D
 
         protected override void OnResize(EventArgs e)
         {
+            this._World.Visual.SetSize(this.Width, this.Height);
             GL.Viewport(0, 0, this.Width, this.Height);
         }
 

@@ -8,10 +8,10 @@ namespace L2D.Engine
     /// </summary>
     public class World
     {
-        public World()
+        public World(VisualSystem VisualSystem, TimeSystem TimeSystem)
         {
-            this._VisualSystem = new VisualSystem();
-            this._TimeSystem = new TimeSystem();
+            this._VisualSystem = VisualSystem;
+            this._TimeSystem = TimeSystem;
             this._Entities = new LinkedList<Entity>();
         }
 

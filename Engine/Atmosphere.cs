@@ -381,13 +381,14 @@ namespace L2D.Engine
             Matrix4 view = Matrix4.LookAt((Vector3)eyepos, (Vector3)(eyepos + EyeDir), new Vector3(0.0f, 0.0f, 1.0f));
             Matrix4 total = view * Proj;
             total.Invert();
-
+            this._Main.Call();
             this._Atmosphere.Setup(this._Main);
             this._Main.SetUniform("EyePosition", eyepos);
             this._Main.SetUniform("SunDirection", SunDirection);
             this._Main.SetUniform("ProjectionInverse", ref total);
             this._Main.SetUniform("NearDistance", (float)Near);
             this._Main.SetUniform("FarDistance", (float)Far);
+
             this._Main.DrawFull();
         }
 

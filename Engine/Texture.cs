@@ -92,6 +92,11 @@ namespace L2D.Engine
             public PixelType PixelType;
         }
 
+        public static readonly Format RGB8Byte = new Format(
+            PixelInternalFormat.Rgb,
+            OpenTK.Graphics.OpenGL.PixelFormat.Bgra,
+            PixelType.UnsignedByte);
+
         public static readonly Format RGB16Float = new Format(
             PixelInternalFormat.Rgb16f,
             OpenTK.Graphics.OpenGL.PixelFormat.Rgb,

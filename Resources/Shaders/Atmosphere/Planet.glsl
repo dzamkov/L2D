@@ -78,13 +78,6 @@ vec3 groundColor(vec3 n, vec3 sol)
 	return full * color;
 }
 
-vec3 HDR(vec3 L) {
-    L.r = L.r < 1.413 ? pow(L.r * 0.38317, 1.0 / 2.2) : 1.0 - exp(-L.r);
-    L.g = L.g < 1.413 ? pow(L.g * 0.38317, 1.0 / 2.2) : 1.0 - exp(-L.g);
-    L.b = L.b < 1.413 ? pow(L.b * 0.38317, 1.0 / 2.2) : 1.0 - exp(-L.b);
-    return L;
-}
-
 void main()
 {
 	vec3 v = normalize(Ray);
@@ -108,7 +101,7 @@ void main()
 	{
 		suncolor = sunColor(v, sol);
 		gl_FragDepth = 1.0;
-		gl_FragColor = vec4(HDR(suncolor + atmocolor), 1.0);
+		gl_FragColor = vec4(suncolor + atmocolor, 1.0);
 	}
 }
 #endif
