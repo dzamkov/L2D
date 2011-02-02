@@ -88,7 +88,8 @@ namespace L2D.Engine
         {
             get
             {
-                return new Path(System.IO.Path.GetFullPath(Process.GetCurrentProcess().MainModule.FileName));
+				string path = System.Reflection.Assembly.GetExecutingAssembly().FullName;
+                return new Path(System.IO.Path.GetFullPath(path));
             }
         }
 
