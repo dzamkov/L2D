@@ -38,6 +38,16 @@ namespace L2D.Engine
         {
             return new Vector3((float)Vector.X, (float)Vector.Y, (float)Vector.Z);
         }
+		
+		public static implicit operator Jitter.LinearMath.JVector(Vector Vector) // note how Y and Z are swapped.
+        {
+            return new Jitter.LinearMath.JVector((float)Vector.X, (float)Vector.Z, (float)Vector.Y);
+        }
+		
+		public static implicit operator Vector(Jitter.LinearMath.JVector Vector)
+        {
+            return new Vector((float)Vector.X, (float)Vector.Z, (float)Vector.Y);
+        }
 
         public static bool operator ==(Vector A, Vector B)
         {

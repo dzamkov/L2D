@@ -35,17 +35,18 @@ namespace L2D
 
             this._World.Add(Atmosphere.MakeEntity(shaders, AtmosphereOptions.DefaultEarth, AtmosphereQualityOptions.Default));
             this._World.Add(new Sun(37.3 * Math.PI / 180.0 /* LOL my house */));
-            this._World.Add(this._Player = new Player());
 
             vissys.Setup();
             vissys.SetSize(this.Width, this.Height);
+            
 
-            this.Keyboard.KeyDown += delegate(object sender, KeyboardKeyEventArgs e)
+			this._World.Add(this._Player = new Player());
+			
+			this.Keyboard.KeyDown += delegate(object sender, KeyboardKeyEventArgs e)
             {
                 if (e.Key == Key.Q) this._TimeRate *= 2.0;
                 if (e.Key == Key.E) this._TimeRate *= 0.5;
             };
-
             this._TimeRate = 1.0;
         }
 
@@ -70,9 +71,10 @@ namespace L2D
         protected override void OnUpdateFrame(FrameEventArgs e)
         {
             this.Title = "L2D(" + ((int)this.RenderFrequency).ToString() + ")";
-
+#if !NO_SHADER
             double updatetime = e.Time * this._TimeRate;
             this._World.Update(updatetime);
+#endif
 
             // Mouse look
             double deltax = 0.0;
@@ -112,7 +114,9 @@ namespace L2D
 
         protected override void OnResize(EventArgs e)
         {
+#if !NO_SHADER
             this._World.Visual.SetSize(this.Width, this.Height);
+#endif
             GL.Viewport(0, 0, this.Width, this.Height);
         }
 
