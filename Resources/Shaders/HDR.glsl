@@ -14,8 +14,6 @@ void main()
 
 
 #ifdef _FRAGMENT_
-uniform sampler2D Bloom;
-
 vec3 HDR(vec3 L) {
 	L *= Exposure;
     L.r = L.r < 1.413 ? pow(L.r * 0.38317, 1.0 / 2.2) : 1.0 - exp(-L.r);

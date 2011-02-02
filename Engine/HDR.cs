@@ -21,6 +21,40 @@ namespace L2D.Engine
             this._HDRTexture = Texture.Initialize2D(Width, Height, Texture.RGB16Float);
             this._HDRTexture.SetInterpolation2D(TextureMinFilter.Nearest, TextureMagFilter.Nearest);
             this._Shaders = Shaders;
+
+            this._Levels = new List<_BlurLevel>();
+            int nw, nh;
+            while(_NextLevel(Width, Height, out nw, out nh))
+            {
+                Width = nw;
+                Height = nh;
+                this._Levels.Add(new _BlurLevel(Width, Height));
+            }
+        }
+
+        /// <summary>
+        /// Calculates the next size of the blur level. Returns false if no more levels are needed.
+        /// </summary>
+        private static bool _NextLevel(int Width, int Height, out int NextWidth, out int NextHeight)
+        {
+            NextWidth = Width / 2;
+            NextHeight = Height / 2;
+            if (Width < 64 && Height < 64)
+            {
+                return false;
+            }
+            else
+            {
+                if (NextWidth > NextHeight)
+                {
+                    NextHeight += NextWidth / 4;
+                }
+                if (NextWidth < NextHeight)
+                {
+                    NextWidth += NextHeight / 4;
+                }
+                return true;
+            }
         }
 
         /// <summary>
@@ -53,7 +87,6 @@ namespace L2D.Engine
 
             GL.LoadIdentity();
 
-            // Find bloom texture
             GL.BindFramebuffer(FramebufferTarget.FramebufferExt, Framebuffer);
             GL.Viewport(0, 0, this._Width, this._Height);
             
@@ -66,7 +99,27 @@ namespace L2D.Engine
             normal.DrawFull();
         }
 
+        /// <summary>
+        /// Level of blurring when computing the bloom texture.
+        /// </summary>
+        private class _BlurLevel
+        {
+            public _BlurLevel(int Width, int Height)
+            {
+                this.Width = Width;
+                this.Height = Height;
+                this.Main = Texture.Initialize2D(Width, Height, Texture.RGB8Byte);
+                this.Temp = Texture.Initialize2D(Width, Height, Texture.RGB8Byte);
+            }
+
+            public int Width;
+            public int Height;
+            public Texture Main;
+            public Texture Temp;
+        }
+
         private double _Exposure;
+        private List<_BlurLevel> _Levels;
         private int _Width;
         private int _Height;
         private int _FBO;
@@ -82,10 +135,12 @@ namespace L2D.Engine
         public HDRShaders(Path Shaders, Blur Blur)
         {
             this.Normal = Shader.Load(Shaders["HDR.glsl"]);
+            this.Copy = Shader.Load(Shaders["Copy.glsl"]);
             this.Blur = Blur;
         }
 
         public Blur Blur;
+        public Shader Copy;
         public Shader Normal;
     }
 }
