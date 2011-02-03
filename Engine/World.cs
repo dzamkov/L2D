@@ -8,10 +8,11 @@ namespace L2D.Engine
     /// </summary>
     public class World
     {
-        public World(VisualSystem VisualSystem, TimeSystem TimeSystem)
+        public World(VisualSystem VisualSystem, TimeSystem TimeSystem, PhysicsSystem PhysicsSystem)
         {
             this._VisualSystem = VisualSystem;
             this._TimeSystem = TimeSystem;
+            this._PhysicsSystem = PhysicsSystem;
             this._Entities = new LinkedList<Entity>();
         }
 
@@ -34,6 +35,17 @@ namespace L2D.Engine
             get
             {
                 return this._TimeSystem;
+            }
+        }
+
+        /// <summary>
+        /// Gets the time subsystem.
+        /// </summary>
+        public PhysicsSystem Physics
+        {
+            get
+            {
+                return this._PhysicsSystem;
             }
         }
 
@@ -72,6 +84,7 @@ namespace L2D.Engine
             // Update systems
             this._VisualSystem.Update(Time);
             this._TimeSystem.Update(Time);
+            this._PhysicsSystem.Update(Time);
 
             // Update entities
             LinkedListNode<Entity> cur = this._Entities.First;
@@ -92,9 +105,18 @@ namespace L2D.Engine
             }
         }
 
+        /// <summary>
+        /// Draw all ents
+        /// </summary>
+        public void Draw()
+        {
+            this._PhysicsSystem.Draw();
+        }
+
         private LinkedList<Entity> _Entities;
         private VisualSystem _VisualSystem;
         private TimeSystem _TimeSystem;
+        private PhysicsSystem _PhysicsSystem;
     }
 
     /// <summary>
@@ -114,6 +136,13 @@ namespace L2D.Engine
         public virtual void Update(double Time)
         {
 
+        }
+
+        /// <summary>
+        /// Tells a system to draw.
+        /// </summary>
+        public virtual void Draw()
+        {
         }
     }
 }

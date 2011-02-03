@@ -123,6 +123,13 @@ namespace L2D.Engine
             
         }
 
+        /// <summary>
+        /// Draw stuff or whatever, Called every frame.
+        /// </summary>
+        protected internal virtual void Draw()
+        {
+        }
+
         private bool _Removed;
     }
 

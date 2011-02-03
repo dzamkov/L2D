@@ -28,14 +28,18 @@ namespace L2D
             Blur b = new Blur(shaders);
             VisualSystem vissys = new VisualSystem(shaders);
             TimeSystem tsys = new TimeSystem();
-            this._World = new World(vissys, tsys);
+
+            PhysicsSystem psys = new PhysicsSystem();
+            this._World = new World(vissys, tsys, psys);
+
+            
 
             // Make it midday
             tsys.Offset = tsys.SecondsPerDay / 2.0;
 
             this._World.Add(Atmosphere.MakeEntity(shaders, AtmosphereOptions.DefaultEarth, AtmosphereQualityOptions.Default));
             this._World.Add(new Sun(37.3 * Math.PI / 180.0 /* LOL my house */));
-
+            
             vissys.Setup();
             vissys.SetSize(this.Width, this.Height);
             
@@ -63,7 +67,7 @@ namespace L2D
             Matrix4 proj = Matrix4.CreatePerspectiveFieldOfView((float)Math.PI / 4.0f, (float)this.Width / (float)this.Height, 0.2f, 1000.0f);
 
             this._World.Visual.Render(ref proj, 0.2f, 1000.0f, this._Player.EyePosition, this._Player.LookDirection);
-
+            this._World.Draw();
             
             this.SwapBuffers();
         }
