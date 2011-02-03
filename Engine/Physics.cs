@@ -81,7 +81,7 @@ namespace L2D.Engine
 		
 		public override void Update (double Time)
 		{
-			this._PhysWorld.Step(Time, false);
+			this._PhysWorld.Step((float)Time, false);
 		}
 		
 		public Jitter.World PhysWorld
