@@ -20,15 +20,19 @@ namespace L2D.Engine
             GL.GenFramebuffers(1, out this._FBO);
             this._HDRTexture = Texture.Initialize2D(Width, Height, Texture.RGB16Float);
             this._HDRTexture.SetInterpolation2D(TextureMinFilter.Nearest, TextureMagFilter.Nearest);
+            this._BloomTexture = Texture.Initialize2D(Width, Height, Texture.RGB16Float);
+            this._BloomTexture.SetInterpolation2D(TextureMinFilter.Nearest, TextureMagFilter.Nearest);
             this._Shaders = Shaders;
 
             this._Levels = new List<_BlurLevel>();
+            int b = 0;
             int nw, nh;
-            while(_NextLevel(Width, Height, out nw, out nh))
+            while(_NextLevel(Width, Height, out nw, out nh) && b < 8)
             {
                 Width = nw;
                 Height = nh;
                 this._Levels.Add(new _BlurLevel(Width, Height));
+                b++;
             }
         }
 
@@ -37,9 +41,9 @@ namespace L2D.Engine
         /// </summary>
         private static bool _NextLevel(int Width, int Height, out int NextWidth, out int NextHeight)
         {
-            NextWidth = Width / 2;
-            NextHeight = Height / 2;
-            if (Width < 64 && Height < 64)
+            NextWidth = Width / 4;
+            NextHeight = Height / 4;
+            if (Width < 8 && Height < 8)
             {
                 return false;
             }
@@ -84,8 +88,23 @@ namespace L2D.Engine
         public void End(uint Framebuffer)
         {
             Shader normal = this._Shaders.Normal;
+            Shader copy = this._Shaders.Copy;
+            Blur blur = this._Shaders.Blur;
 
             GL.LoadIdentity();
+
+            // Begin downscaling
+            Texture cur = this._HDRTexture;
+            copy.SetUniform("Source", TextureUnit.Texture0);
+            foreach (_BlurLevel level in this._Levels)
+            {
+                GL.FramebufferTexture2D(FramebufferTarget.FramebufferExt, FramebufferAttachment.ColorAttachment0Ext, TextureTarget.Texture2D, level.Main.ID, 0);
+                GL.Viewport(0, 0, level.Width, level.Height);
+                cur.SetUnit(TextureTarget.Texture2D, TextureUnit.Texture0);
+                copy.DrawFull();
+                blur.Apply(level.Main, level.Temp, level.Main, level.Width, level.Height);
+                cur = level.Main;
+            }
 
             GL.BindFramebuffer(FramebufferTarget.FramebufferExt, Framebuffer);
             GL.Viewport(0, 0, this._Width, this._Height);
@@ -93,6 +112,23 @@ namespace L2D.Engine
 
             // Final
             normal.Call();
+
+            // Link bloom textures
+            double w = 0.1 / (double)this._Levels.Count;
+            for (int t = 0; t < 8; t++)
+            {
+                double weight = 0.0;
+                string tstr = t.ToString();
+                if (t < this._Levels.Count)
+                {
+                    TextureUnit unit = (TextureUnit)((int)TextureUnit.Texture1 + t);
+                    this._Levels[t].Main.SetUnit(TextureTarget.Texture2D, unit);
+                    normal.SetUniform("Bloom" + tstr, unit);
+                    weight = w;
+                }
+                normal.SetUniform("W" + tstr, (float)weight);
+            }
+
             this._HDRTexture.SetUnit(TextureTarget.Texture2D, TextureUnit.Texture0);
             normal.SetUniform("Exposure", 1.0f);
             normal.SetUniform("Source", TextureUnit.Texture0);
@@ -108,8 +144,8 @@ namespace L2D.Engine
             {
                 this.Width = Width;
                 this.Height = Height;
-                this.Main = Texture.Initialize2D(Width, Height, Texture.RGB8Byte);
-                this.Temp = Texture.Initialize2D(Width, Height, Texture.RGB8Byte);
+                this.Main = Texture.Initialize2D(Width, Height, Texture.RGB16Float);
+                this.Temp = Texture.Initialize2D(Width, Height, Texture.RGB16Float);
             }
 
             public int Width;
@@ -124,6 +160,7 @@ namespace L2D.Engine
         private int _Height;
         private int _FBO;
         private Texture _HDRTexture;
+        private Texture _BloomTexture;
         private HDRShaders _Shaders;
     }
 

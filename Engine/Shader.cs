@@ -137,11 +137,19 @@ namespace L2D.Engine
         /// </summary>
         public static Shader Load(Path Vertex, Path Fragment)
         {
+            return Load(Path.ReadText(Vertex), Path.ReadText(Fragment));
+        }
+
+        /// <summary>
+        /// Loads a shader program from a vertex and fragment shader in GLSL format.
+        /// </summary>
+        public static Shader Load(string Vertex, string Fragment)
+        {
             Shader shade = new Shader();
             int vshade = GL.CreateShader(ShaderType.VertexShader);
             int fshade = GL.CreateShader(ShaderType.FragmentShader);
-            GL.ShaderSource(vshade, Path.ReadText(Vertex));
-            GL.ShaderSource(fshade, Path.ReadText(Fragment));
+            GL.ShaderSource(vshade, Vertex);
+            GL.ShaderSource(fshade, Fragment);
             GL.CompileShader(vshade);
             GL.CompileShader(fshade);
             shade.Program = GL.CreateProgram();
