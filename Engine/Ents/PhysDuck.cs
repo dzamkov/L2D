@@ -27,6 +27,7 @@ namespace L2D.Engine
             body.Position = new Vector(0.0, 0.0, 5.0);
 
             this._Phys = new PhysicsComponent(body);
+            this._Phys.Scale = new Vector(0.0005, 0.0005, 0.0005);
             this._Duck = new ModelComponent(Model.LoadFile(res["Models"]["ducky.obj"].PathString), this._Phys);
         }
 
@@ -39,13 +40,13 @@ namespace L2D.Engine
             }
         }
 
-        protected internal override void Draw()
+        private double Time;
+        protected internal override void OnUpdate(double Time)
         {
             
         }
 
         private PhysicsComponent _Phys;
         private ModelComponent _Duck;
-        private Vector _Position;
     }
 }

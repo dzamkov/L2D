@@ -78,9 +78,14 @@ namespace L2D.Engine
         {
             get
             {
-                return new Vector(0.0005, 0.0005, 0.0005);
+                return this._Scale;
+            }
+            set
+            {
+                this._Scale = value;
             }
         }
+        private Vector _Scale = new Vector(1.0, 1.0, 1.0);
 
 		private RigidBody _PhysMesh;
 		internal PhysicsSystem _System;
