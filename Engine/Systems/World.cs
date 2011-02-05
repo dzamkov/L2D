@@ -67,6 +67,12 @@ namespace L2D.Engine
                 {
                     this._TimeSystem.Add(tc);
                 }
+
+                PhysicsComponent pc = c as PhysicsComponent;
+                if (pc != null)
+                {
+                    this._PhysicsSystem.Add(pc);
+                }
             }
 
             // Processing simple entities is a waste of time anyway.

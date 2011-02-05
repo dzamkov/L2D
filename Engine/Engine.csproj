@@ -40,26 +40,32 @@
   </Target>
   -->
   <ItemGroup>
-    <Compile Include="Atmosphere.cs" />
-    <Compile Include="Blur.cs" />
-    <Compile Include="Color.cs" />
-    <Compile Include="Component.cs" />
-    <Compile Include="Entity.cs" />
-    <Compile Include="HDR.cs" />
-    <Compile Include="Matrix.cs" />
-    <Compile Include="Path.cs" />
-    <Compile Include="Player.cs" />
-    <Compile Include="Shader.cs" />
-    <Compile Include="Sun.cs" />
-    <Compile Include="Texture.cs" />
-    <Compile Include="Time.cs" />
-    <Compile Include="Vector.cs" />
-    <Compile Include="Visual.cs" />
-    <Compile Include="World.cs" />
-    <Compile Include="Physics.cs" />
+    <Compile Include="Ents\Atmosphere.cs" />
+    <Compile Include="Ents\PhysDuck.cs" />
+    <Compile Include="Math\Angle.cs" />
+    <Compile Include="Misc\Blur.cs" />
+    <Compile Include="Misc\Color.cs" />
+    <Compile Include="Systems\Component.cs" />
+    <Compile Include="Ents\Entity.cs" />
+    <Compile Include="Misc\HDR.cs" />
+    <Compile Include="Math\Matrix.cs" />
+    <Compile Include="Misc\Path.cs" />
+    <Compile Include="Ents\Player.cs" />
+    <Compile Include="Misc\Shader.cs" />
+    <Compile Include="Ents\Sun.cs" />
+    <Compile Include="Misc\Texture.cs" />
+    <Compile Include="Systems\Renderable\Formats\OBJ.cs" />
+    <Compile Include="Systems\Renderable\ModelComponent.cs" />
+    <Compile Include="Systems\Renderable\Model.cs" />
+    <Compile Include="Systems\Time\Time.cs" />
+    <Compile Include="Math\Vector.cs" />
+    <Compile Include="Systems\Visual\Visual.cs" />
+    <Compile Include="Systems\World.cs" />
+    <Compile Include="Systems\Physics\Physics.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="OpenTK, Version=1.0.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4">
       <SpecificVersion>False</SpecificVersion>
@@ -69,5 +75,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\References\Jitter.dll</HintPath>
     </Reference>
+    <Reference Include="System.Xml" />
   </ItemGroup>
 </Project>

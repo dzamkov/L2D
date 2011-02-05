@@ -229,6 +229,33 @@ namespace L2D.Engine
             return A;
         }
 
+        public static Vector Up
+        {
+            get
+            {
+                return _Up;
+            }
+        }
+        private static Vector _Up = new Vector(0.0, 0.0, 1.0);
+
+        public static Vector Right
+        {
+            get
+            {
+                return _Right;
+            }
+        }
+        private static Vector _Right = new Vector(0.0, 1.0, 0.0);
+
+        public static Vector Forward
+        {
+            get
+            {
+                return _Forward;
+            }
+        }
+        private static Vector _Forward = new Vector(1.0, 0.0, 0.0);
+
         public double X;
         public double Y;
         public double Z;

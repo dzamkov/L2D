@@ -24,6 +24,7 @@ namespace L2D.Engine
         {
             this._HDRShaders = new HDRShaders(Shaders, new Blur(Shaders));
             this._CopyShader = Shader.Load(Shaders["Copy.glsl"]);
+            this._Models = new LinkedList<ModelComponent>();
         }
 
         public override void Add(VisualComponent Component)
@@ -40,6 +41,12 @@ namespace L2D.Engine
             if (svc != null)
             {
                 this._Sun = svc;
+            }
+
+            ModelComponent mvc = Component as ModelComponent;
+            if (mvc != null)
+            {
+                this._Models.AddLast(mvc);
             }
         }
 
@@ -68,6 +75,7 @@ namespace L2D.Engine
         /// </summary>
         public void Render(ref Matrix4 Proj, double Near, double Far, Vector EyePos, Vector EyeDir)
         {
+            GL.Disable(EnableCap.DepthTest);
             if (this._Sun != null && this._Sun.Removed) this._Sun = null;
             if (this._Atmosphere != null && this._Atmosphere.Removed) this._Atmosphere = null;
 
@@ -91,6 +99,39 @@ namespace L2D.Engine
             {
                 this._HDR.End(0);
             }
+
+            Shader.Dismiss();
+
+            GL.Enable(EnableCap.DepthTest);
+
+            Matrix4 view = Matrix4.LookAt(
+                (Vector3)EyePos,
+                (Vector3)(EyePos + EyeDir),
+                (Vector3)Vector.Up);
+
+            GL.MatrixMode(MatrixMode.Modelview);
+            GL.LoadMatrix(ref Proj);
+            GL.MultMatrix(ref view);
+
+            DrawModels();
+        }
+
+        private void DrawModels()
+        {
+            LinkedListNode<ModelComponent> node = this._Models.First;
+            
+            while (node != null)
+            {
+                LinkedListNode<ModelComponent> nextnode = node.Next;
+                ModelComponent m = node.Value;
+
+                if (m.Removed)
+                    this._Models.Remove(node);
+                else
+                    m.Render();
+                
+                node = nextnode;
+            }
         }
 
         private HDR _HDR;
@@ -98,6 +139,8 @@ namespace L2D.Engine
         private Shader _CopyShader;
         private SunVisualComponent _Sun;
         private AtmosphereVisualComponent _Atmosphere;
+
+        private LinkedList<ModelComponent> _Models;
     }
 
 }

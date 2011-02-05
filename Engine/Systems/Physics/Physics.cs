@@ -17,8 +17,14 @@ namespace L2D.Engine
     /// <summary>
     /// Controls the ents physics
     /// </summary>
-	public class PhysicsComponent : Component
+	public class PhysicsComponent : Component, ITransform
 	{
+        public PhysicsComponent(RigidBody body)
+        {
+            this._PhysMesh = body;
+            
+        }
+
 		public PhysicsSystem System
 		{
 			get
@@ -47,24 +53,36 @@ namespace L2D.Engine
 
         public void Draw()
         {
-            RigidBody body = this._PhysMesh;
-            Vector vec = body.Position;
-
-            GL.Color4(1.0,0.0,0.0,1.0);
-            GL.Begin(BeginMode.Lines);
-
-            GL.Vertex3(vec);
-
-            GL.End();
         }
 
 		public void Free()
 		{
 			this.System._PhysWorld.RemoveBody(this._PhysMesh);
 		}
-		
+
+        public Vector Position
+        {
+            get
+            {
+                return this._PhysMesh.Position;
+            }
+        }
+        public Angle Orientation
+        {
+            get
+            {
+                return new Angle();
+            }
+        }
+        public Vector Scale
+        {
+            get
+            {
+                return new Vector(0.005, 0.005, 0.005);
+            }
+        }
+
 		private RigidBody _PhysMesh;
-		
 		internal PhysicsSystem _System;
 	}
 	
@@ -85,9 +103,8 @@ namespace L2D.Engine
             ground.Tag = Color.RGB(50,255,50);
             ground.IsStatic = true;
 
-            PhysicsComponent pc = new PhysicsComponent();
+            PhysicsComponent pc = new PhysicsComponent(ground);
             pc._System = this;
-            pc.PhysMesh = ground;
 
             this.Add(pc);
 		}
@@ -96,6 +113,7 @@ namespace L2D.Engine
 		{
 			Component._System = this;
             this._Components.AddLast(Component);
+            this._PhysWorld.AddBody(Component.PhysMesh);
 		}
 		
 		public override void Update (double Time)
@@ -108,21 +126,6 @@ namespace L2D.Engine
         /// </summary>
         public override void Draw()
         {
-            LinkedListNode<PhysicsComponent> node = this._Components.First;
-            while (node != null)
-            {
-                PhysicsComponent pc = node.Value;
-                node = node.Next;
-
-                if (pc.Removed)
-                {
-                    this._Components.Remove(pc);
-                    pc.Free();
-                    continue;
-                }
-                    
-                pc.Draw();
-            }
         }
 
 		public Jitter.World PhysWorld

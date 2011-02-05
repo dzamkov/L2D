@@ -8,6 +8,8 @@ using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Input;
 
+
+
 using L2D.Engine;
 using Color = L2D.Engine.Color;
 
@@ -22,6 +24,14 @@ namespace L2D
             Path shaders = resources["Shaders"];
 
             this.VSync = VSyncMode.Off;
+
+            GL.Enable(EnableCap.ColorMaterial);
+            GL.Enable(EnableCap.VertexArray);
+            //GL.Enable(EnableCap.NormalArray);
+            GL.Enable(EnableCap.TextureCoordArray);
+
+            GL.Enable(EnableCap.CullFace);
+            GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
 
             this.WindowState = WindowState.Maximized;
 
@@ -39,11 +49,11 @@ namespace L2D
 
             this._World.Add(Atmosphere.MakeEntity(shaders, AtmosphereOptions.DefaultEarth, AtmosphereQualityOptions.Default));
             this._World.Add(new Sun(37.3 * Math.PI / 180.0 /* LOL my house */));
-            
+            this._World.Add(new PhysDuck());
+
             vissys.Setup();
             vissys.SetSize(this.Width, this.Height);
-            
-
+ 
 			this._World.Add(this._Player = new Player());
 			
 			this.Keyboard.KeyDown += delegate(object sender, KeyboardKeyEventArgs e)
@@ -64,22 +74,27 @@ namespace L2D
 
         protected override void OnRenderFrame(FrameEventArgs e)
         {
-            Matrix4 proj = Matrix4.CreatePerspectiveFieldOfView((float)Math.PI / 4.0f, (float)this.Width / (float)this.Height, 0.2f, 1000.0f);
+            GL.Clear(ClearBufferMask.DepthBufferBit | ClearBufferMask.ColorBufferBit);
 
+            Vector eyepos = this._Player.EyePosition;
+
+            Matrix4 proj = Matrix4.CreatePerspectiveFieldOfView((float)Math.PI / 4.0f, (float)this.Width / (float)this.Height, 0.2f, 1000.0f);
+            Matrix4 view = Matrix4.LookAt(
+                (Vector3)this._Player.EyePosition,
+                (Vector3)(this._Player.EyePosition + this._Player.LookDirection),
+                (Vector3)Vector.Up);
+            
             this._World.Visual.Render(ref proj, 0.2f, 1000.0f, this._Player.EyePosition, this._Player.LookDirection);
             this._World.Draw();
-            
+
             this.SwapBuffers();
         }
 
         protected override void OnUpdateFrame(FrameEventArgs e)
         {
-            this.Title = "L2D(" + ((int)this.RenderFrequency).ToString() + ")";
-#if !NO_SHADER
-            double updatetime = e.Time * this._TimeRate;
-            this._World.Update(updatetime);
-#endif
+            this._World.Update(e.Time);
 
+            this.Title = "L2D(" + ((int)this.RenderFrequency).ToString() + ")";
             // Mouse look
             double deltax = 0.0;
             double deltaz = 0.0;
