@@ -54,7 +54,7 @@ namespace L2D
             vissys.Setup();
             vissys.SetSize(this.Width, this.Height);
  
-			this._World.Add(this._Player = new Player());
+			this._World.Add(this._Player = new Player(this._World.Physics.PhysWorld));
 			
 			this.Keyboard.KeyDown += delegate(object sender, KeyboardKeyEventArgs e)
             {
@@ -123,7 +123,7 @@ namespace L2D
             if (this.Keyboard[Key.A]) foward = -1.0;
             if (this.Keyboard[Key.D]) foward = 1.0;
 
-            this._Player.UpdateControl(deltax, deltaz, foward, side);
+            this._Player.UpdateControl(deltax, deltaz, foward, side, this.Keyboard);
 
             if (this.Keyboard[Key.Escape])
             {

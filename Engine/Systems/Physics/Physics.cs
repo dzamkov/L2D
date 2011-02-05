@@ -102,10 +102,10 @@ namespace L2D.Engine
             this._PhysWorld = new Jitter.World(this._CollisionSystem);
             this._Components = new LinkedList<PhysicsComponent>();
 
-            Shape groundshape = new BoxShape(new Vector(100, 100, 1));
+            Shape groundshape = new BoxShape(new Vector(200, 200, 1));
             RigidBody ground = new RigidBody(groundshape);
 
-            ground.Tag = Color.RGB(50,255,50);
+            ground.Position = new Vector(0.0, 0.0, -1.0);
             ground.IsStatic = true;
 
             PhysicsComponent pc = new PhysicsComponent(ground);
