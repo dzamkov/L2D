@@ -92,7 +92,7 @@ namespace L2D
 
         protected override void OnUpdateFrame(FrameEventArgs e)
         {
-            this._World.Update(e.Time);
+            this._World.Update(e.Time * this._TimeRate);
 
             this.Title = "L2D(" + ((int)this.RenderFrequency).ToString() + ")";
             // Mouse look

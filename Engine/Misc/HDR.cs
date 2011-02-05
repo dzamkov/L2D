@@ -20,8 +20,6 @@ namespace L2D.Engine
             GL.GenFramebuffers(1, out this._FBO);
             this._HDRTexture = Texture.Initialize2D(Width, Height, Texture.RGB16Float);
             this._HDRTexture.SetInterpolation2D(TextureMinFilter.Nearest, TextureMagFilter.Nearest);
-            this._BloomTexture = Texture.Initialize2D(Width, Height, Texture.RGB16Float);
-            this._BloomTexture.SetInterpolation2D(TextureMinFilter.Nearest, TextureMagFilter.Nearest);
             this._Shaders = Shaders;
 
             this._Levels = new List<_BlurLevel>();
@@ -68,6 +66,11 @@ namespace L2D.Engine
         {
             this._HDRTexture.Delete();
             GL.DeleteFramebuffers(1, ref this._FBO);
+            foreach (_BlurLevel level in this._Levels)
+            {
+                level.Main.Delete();
+                level.Temp.Delete();
+            }
         }
 
         /// <summary>
@@ -160,7 +163,6 @@ namespace L2D.Engine
         private int _Height;
         private int _FBO;
         private Texture _HDRTexture;
-        private Texture _BloomTexture;
         private HDRShaders _Shaders;
     }
 
