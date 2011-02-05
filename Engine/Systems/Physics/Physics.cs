@@ -78,7 +78,7 @@ namespace L2D.Engine
         {
             get
             {
-                return new Vector(0.005, 0.005, 0.005);
+                return new Vector(0.0005, 0.0005, 0.0005);
             }
         }
 

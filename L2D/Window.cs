@@ -49,7 +49,7 @@ namespace L2D
 
             this._World.Add(Atmosphere.MakeEntity(shaders, AtmosphereOptions.DefaultEarth, AtmosphereQualityOptions.Default));
             this._World.Add(new Sun(37.3 * Math.PI / 180.0 /* LOL my house */));
-            this._World.Add(new PhysDuck());
+            this._World.Add(new PhysDuck(resources));
 
             vissys.Setup();
             vissys.SetSize(this.Width, this.Height);

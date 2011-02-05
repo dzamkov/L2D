@@ -33,8 +33,8 @@ namespace L2D.Engine
 
         private static int[] _Load(string filename)
         {
-            StreamReader str = new StreamReader(filename);
-
+            StreamReader str = new StreamReader( filename );
+            
             List<Vector3d> points = new List<Vector3d>();
             List<Vector3d> normals = new List<Vector3d>();
             List<Vector2d> texcoords = new List<Vector2d>();

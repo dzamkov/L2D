@@ -19,7 +19,7 @@ namespace L2D.Engine
     /// </summary>
     public class PhysDuck : Entity
     {
-        public PhysDuck()
+        public PhysDuck(Path res)
         {
             Shape shape = new BoxShape(new Vector(1.0, 1.0, 1.0));
             RigidBody body = new RigidBody(shape);
@@ -27,7 +27,7 @@ namespace L2D.Engine
             body.Position = new Vector(0.0, 0.0, 5.0);
 
             this._Phys = new PhysicsComponent(body);
-            this._Duck = new ModelComponent(Model.LoadFile("ducky.obj"), this._Phys);
+            this._Duck = new ModelComponent(Model.LoadFile(res["Models"]["ducky.obj"].PathString), this._Phys);
         }
 
         public override IEnumerable<Component> Components
