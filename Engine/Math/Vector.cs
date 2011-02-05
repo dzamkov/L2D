@@ -74,9 +74,27 @@ namespace L2D.Engine
             return new Vector(A.X * Magnitude, A.Y * Magnitude, A.Z * Magnitude);
         }
 
+        public static Vector operator *(Vector A, Vector B)
+        {
+            return new Vector(A.X * B.X, A.Y * B.Y, A.Z * B.Z);
+        }
+
         public static Vector operator -(Vector A)
         {
             return new Vector(-A.X, -A.Y, -A.Z);
+        }
+
+        /// <summary>
+        /// Removes NaN values from a vector and replaces then with 0.0
+        /// </summary>
+        public void UnNaN()
+        {
+            if (this.X != this.X)
+                this.X = 0.0;
+            if (this.Y != this.Y)
+                this.Y = 0.0;
+            if (this.Z != this.Z)
+                this.Z = 0.0;
         }
 
         public bool Equals(Vector other)
@@ -255,6 +273,15 @@ namespace L2D.Engine
             }
         }
         private static Vector _Forward = new Vector(1.0, 0.0, 0.0);
+
+        public static Vector Down
+        {
+            get
+            {
+                return _Down;
+            }
+        }
+        private static Vector _Down = new Vector(0.0, 0.0, -1.0);
 
         public double X;
         public double Y;
