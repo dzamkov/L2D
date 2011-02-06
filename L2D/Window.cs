@@ -1,4 +1,5 @@
-﻿using System;
+﻿//#define SHADERS
+using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 using System.Drawing;
@@ -46,9 +47,10 @@ namespace L2D
 
             // Make it midday
             tsys.Offset = tsys.SecondsPerDay / 2.0;
-
+#if SHADERS
             this._World.Add(Atmosphere.MakeEntity(shaders, AtmosphereOptions.DefaultEarth, AtmosphereQualityOptions.Default));
-            this._World.Add(new Sun(37.3 * Math.PI / 180.0 /* LOL my house */));
+			this._World.Add(new Sun(37.3 * Math.PI / 180.0 /* LOL my house */));
+#endif
             this._World.Add(new GroundTest(resources, new Vector2d(1.0, 1.0)));
             this._World.Add(new PhysDuck(resources));
             

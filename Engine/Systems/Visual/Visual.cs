@@ -76,6 +76,7 @@ namespace L2D.Engine
         public void Render(ref Matrix4 Proj, double Near, double Far, Vector EyePos, Vector EyeDir)
         {
             GL.Disable(EnableCap.DepthTest);
+#if SHADERS
             if (this._Sun != null && this._Sun.Removed) this._Sun = null;
             if (this._Atmosphere != null && this._Atmosphere.Removed) this._Atmosphere = null;
 
@@ -101,7 +102,7 @@ namespace L2D.Engine
             }
 
             Shader.Dismiss();
-
+#endif
             GL.Enable(EnableCap.DepthTest);
 
             Matrix4 view = Matrix4.LookAt(
