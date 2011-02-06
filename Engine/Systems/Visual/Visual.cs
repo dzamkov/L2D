@@ -104,7 +104,7 @@ namespace L2D.Engine
             Shader.Dismiss();
 #endif
             GL.Enable(EnableCap.DepthTest);
-
+			
             Matrix4 view = Matrix4.LookAt(
                 (Vector3)EyePos,
                 (Vector3)(EyePos + EyeDir),

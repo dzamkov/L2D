@@ -66,10 +66,6 @@ namespace L2D.Engine
         {
             Vector Pos = Transform.Position;
 			Matrix4d Ang = Transform.Orientation;
-			Ang.M31 = 0.0;
-			//Vector4d VecTrans = new Vector4d(Pos.X, Pos.Y, Pos.Z, 1.0);
-			//Ang.Row3 = VecTrans;
-			
             Vector Scale = Transform.Scale;
 
             GL.PushMatrix();
@@ -77,8 +73,6 @@ namespace L2D.Engine
                 GL.Color4(this.Color);
                 
 				GL.Translate(Pos);
-				Ang.Invert();
-				
 				GL.MultMatrix(ref Ang);
 				GL.Scale(Scale);
                 {

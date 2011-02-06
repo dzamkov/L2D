@@ -26,7 +26,7 @@ namespace L2D.Engine
 
             body.Position = new Vector(0.0, 0.0, 5.0);
             this._Phys = new PhysicsComponent(body);
-            this._Phys.Scale = new Vector(0.0005, 0.0005, 0.0005);
+            this._Phys.Scale = new Vector(0.005, 0.005, 0.005);
             this._Duck = new ModelComponent(Model.LoadFile(res["Models"]["ducky.obj"].PathString), this._Phys);
             this._Duck.Model.Color = Color.RGB(1.0, 0.0, 0.0);
         }

@@ -368,17 +368,17 @@ namespace L2D.Engine
         public static implicit operator Jitter.LinearMath.JMatrix(Matrix Matrix)
         {
             return new Jitter.LinearMath.JMatrix(
-                (float)Matrix.M11, (float)Matrix.M21, (float)Matrix.M31,
-                (float)Matrix.M12, (float)Matrix.M22, (float)Matrix.M32,
-                (float)Matrix.M13, (float)Matrix.M23, (float)Matrix.M33);
+                (float)Matrix.M11, (float)Matrix.M11, (float)Matrix.M13,
+                (float)Matrix.M21, (float)Matrix.M22, (float)Matrix.M23,
+                (float)Matrix.M31, (float)Matrix.M32, (float)Matrix.M33);
         }
 
         public static implicit operator Matrix(Jitter.LinearMath.JMatrix Matrix)
         {
             return new Matrix(
-                (double)Matrix.M11, (double)Matrix.M21, (double)Matrix.M23, 0.0,
-                (double)Matrix.M12, (double)Matrix.M22, (double)Matrix.M32, 0.0,
-                (double)Matrix.M13, (double)Matrix.M23, (double)Matrix.M33, 0.0,
+                (double)Matrix.M11, (double)Matrix.M12, (double)Matrix.M13, 0.0,
+                (double)Matrix.M21, (double)Matrix.M22, (double)Matrix.M23, 0.0,
+                (double)Matrix.M31, (double)Matrix.M32, (double)Matrix.M33, 0.0,
                 0.0,                 0.0,                 0.0,              1.0);
         }
 

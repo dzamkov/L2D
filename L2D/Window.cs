@@ -31,13 +31,8 @@ namespace L2D
             //GL.Enable(EnableCap.NormalArray);
             GL.Enable(EnableCap.TextureCoordArray);
 			
-			float[] ambientLight = new float[] { 0.6f, 0.6f, 0.6f, 0 };
-			GL.Enable(EnableCap.Lighting);
-			GL.Enable(EnableCap.Light0);
-            GL.LightModel(LightModelParameter.LightModelAmbient, ambientLight);
 			
-
-            GL.Enable(EnableCap.CullFace);
+            //GL.Enable(EnableCap.CullFace);
             //GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
 
             this.WindowState = WindowState.Maximized;
