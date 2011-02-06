@@ -39,6 +39,7 @@ namespace L2D.Engine
     {
         public Model()
         {
+            this.Color = Color.RGB(1.0, 1.0, 1.0);
         }
 
         public static Model LoadFile(string filename)
@@ -64,18 +65,19 @@ namespace L2D.Engine
         public void Draw(ITransform Transform)
         {
             Vector Pos = Transform.Position;
-            Angle Ang = Transform.Orientation;
+            Matrix4d Ang = Transform.Orientation;
             Vector Scale = Transform.Scale;
 
             GL.PushMatrix();
             {
+                GL.Color4(this.Color);
                 GL.Translate(Pos);
 
-                GL.Rotate(Ang.Pitch, Vector.Right);
-                GL.Rotate(Ang.Yaw, Vector.Up);
-                GL.Rotate(Ang.Roll, Vector.Forward);
-
                 GL.Scale(Scale);
+
+                Ang.Transpose();
+
+                GL.MultMatrix(ref Ang);
                 {
                     GL.BindBuffer(BufferTarget.ArrayBuffer, this.VBOID);
 
@@ -88,6 +90,7 @@ namespace L2D.Engine
             }
             GL.PopMatrix();
         }
+        public Color Color { get; set; }
         public int VBOID;
         public int Vertices { get; set; }
     }

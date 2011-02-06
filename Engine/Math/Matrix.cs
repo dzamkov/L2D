@@ -379,7 +379,7 @@ namespace L2D.Engine
                 (double)Matrix.M11, (double)Matrix.M21, (double)Matrix.M23, 0.0,
                 (double)Matrix.M12, (double)Matrix.M22, (double)Matrix.M32, 0.0,
                 (double)Matrix.M13, (double)Matrix.M23, (double)Matrix.M33, 0.0,
-                0.0,                 0.0,                 0.0,              0.0);
+                0.0,                 0.0,                 0.0,              1.0);
         }
 
     }

@@ -41,6 +41,7 @@
   -->
   <ItemGroup>
     <Compile Include="Ents\Atmosphere.cs" />
+    <Compile Include="Ents\GroundTest.cs" />
     <Compile Include="Ents\PhysDuck.cs" />
     <Compile Include="Math\Angle.cs" />
     <Compile Include="Misc\Blur.cs" />

@@ -40,7 +40,7 @@ namespace L2D.Engine
     public interface ITransform
     {
         Vector      Position { get; }
-        Angle       Orientation { get; }
+        Matrix4d    Orientation { get; }
         Vector      Scale { get; }
     }
 }

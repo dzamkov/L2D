@@ -168,6 +168,7 @@ namespace L2D.Engine
             return Incoming - Normal * (2 * Vector.Dot(Incoming, Normal) / Normal.SquareLength);
         }
 
+
         /// <summary>
         /// Rotates the vector about an axis by the specified amount in radians.
         /// </summary>

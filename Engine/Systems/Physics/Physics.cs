@@ -67,11 +67,11 @@ namespace L2D.Engine
                 return this._PhysMesh.Position;
             }
         }
-        public Angle Orientation
+        public Matrix4d Orientation
         {
             get
             {
-                return new Angle();
+                return (Matrix)this._PhysMesh.Orientation;
             }
         }
         public Vector Scale
@@ -101,17 +101,6 @@ namespace L2D.Engine
             this._CollisionSystem = new CollisionSystemSAP();
             this._PhysWorld = new Jitter.World(this._CollisionSystem);
             this._Components = new LinkedList<PhysicsComponent>();
-
-            Shape groundshape = new BoxShape(new Vector(200, 200, 1));
-            RigidBody ground = new RigidBody(groundshape);
-
-            ground.Position = new Vector(0.0, 0.0, -1.0);
-            ground.IsStatic = true;
-
-            PhysicsComponent pc = new PhysicsComponent(ground);
-            pc._System = this;
-
-            this.Add(pc);
 		}
 		
 		public override void Add (PhysicsComponent Component)
@@ -123,7 +112,7 @@ namespace L2D.Engine
 		
 		public override void Update (double Time)
 		{
-			this._PhysWorld.Step((float)Time, false);
+			this._PhysWorld.Step(1f/100f, false);
 		}
 
         /// <summary>
