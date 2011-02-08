@@ -52,7 +52,7 @@ namespace L2D.Engine
                     x = double.Parse(split_line[1]);
                     y = double.Parse(split_line[2]);
                     z = double.Parse(split_line[3]);
-                    points.Add(new Vector3d(x, z, y));
+                    points.Add(new Vector3d(x, y, z));
                 }
                 else if (line.StartsWith("vt"))
                 {

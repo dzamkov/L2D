@@ -1,4 +1,4 @@
-﻿//#define SHADERS
+﻿#define SHADERS
 using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
@@ -32,7 +32,7 @@ namespace L2D
             GL.Enable(EnableCap.TextureCoordArray);
 			
 			
-            //GL.Enable(EnableCap.CullFace);
+            GL.Enable(EnableCap.CullFace);
             //GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
 
             this.WindowState = WindowState.Maximized;

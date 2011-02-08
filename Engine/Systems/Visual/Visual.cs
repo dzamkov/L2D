@@ -1,4 +1,5 @@
-﻿using System;
+﻿#define SHADERS
+using System;
 using System.Collections.Generic;
 
 using OpenTK;
