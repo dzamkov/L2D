@@ -11,6 +11,7 @@ namespace L2D.Engine
 {
     public struct Vertex
     {
+        static public int Size = 72; // sizeof(double) * no. of elements (total size of all elements)
         public Vertex(double X, double Y, double Z, double R, double G, double B, double A, double UVX, double UVY)
         {
             this.X = X;
