@@ -25,6 +25,7 @@ namespace L2D.Engine
         {
             this._HDRShaders = new HDRShaders(Shaders, new Blur(Shaders));
             this._CopyShader = Shader.Load(Shaders["Copy.glsl"]);
+            this._LightingShader = Shader.Load(Shaders["Light.glsl"]);
             this._Models = new LinkedList<ModelComponent>();
         }
 
@@ -96,6 +97,24 @@ namespace L2D.Engine
                 }
             }
 
+            this._LightingShader.SetUniform("SunDirection", this._Sun.Sun.Direction);
+            this._LightingShader.SetUniform("Diffuse", 0.5f);
+            this._LightingShader.SetUniform("Ambient", 0.5f);
+
+            GL.Enable(EnableCap.DepthTest);
+
+            Matrix4 view = Matrix4.LookAt(
+                (Vector3)EyePos,
+                (Vector3)(EyePos + EyeDir),
+                (Vector3)Vector.Up);
+
+            GL.MatrixMode(MatrixMode.Projection);
+            GL.LoadMatrix(ref Proj);
+            GL.MultMatrix(ref view);// not depricated
+
+            this._LightingShader.Call();
+            DrawModels();
+
             // End hdr
             if (this._HDR != null)
             {
@@ -104,18 +123,8 @@ namespace L2D.Engine
 
             Shader.Dismiss();
 #endif
-            GL.Enable(EnableCap.DepthTest);
-			
-            Matrix4 view = Matrix4.LookAt(
-                (Vector3)EyePos,
-                (Vector3)(EyePos + EyeDir),
-                (Vector3)Vector.Up);
 
-            GL.MatrixMode(MatrixMode.Modelview);
-            GL.LoadMatrix(ref Proj);
-            GL.MultMatrix(ref view);
-
-            DrawModels();
+            
         }
 
         private void DrawModels()
@@ -139,6 +148,7 @@ namespace L2D.Engine
         private HDR _HDR;
         private HDRShaders _HDRShaders;
         private Shader _CopyShader;
+        private Shader _LightingShader;
         private SunVisualComponent _Sun;
         private AtmosphereVisualComponent _Atmosphere;
 

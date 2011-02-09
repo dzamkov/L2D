@@ -25,7 +25,7 @@ namespace L2D.Engine
             RigidBody body = new RigidBody(shape);
             body.Mass = 99999f;
             body.IsStatic = true;
-            body.Position = new Vector(-Size.X / 2.0, -Size.Y / 2.0, 0.0);
+            body.Position = new Vector(0.0, 0.0, 0.0);
             this._Phys = new PhysicsComponent(body);
             this._Phys.Scale = new Vector(Size.X, Size.Y, 1.0);
             this._Duck = new ModelComponent(Model.LoadFile(res["Models"]["cube.obj"].PathString), this._Phys);

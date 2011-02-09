@@ -72,7 +72,7 @@ namespace L2D.Engine
         /// <summary>
         /// Loads the actual object if it has not been precached. (NOT MULTI THREADED!)
         /// </summary>
-        private static int[] _Load(string filename)
+        private unsafe static int[] _Load(string filename)
         {
             if (!_Initalized)
                 Init();
@@ -92,8 +92,41 @@ namespace L2D.Engine
                 TDele dele;
                 if (Subscribed.TryGetValue(opcode, out dele))
                 {
-                    dele(split_line);
+                    try
+                    {
+                        dele(split_line);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                    }
                 }
+            }
+
+            if (_Normals.Count == 0)
+            {
+                for (int i = 0; i < _Triangles.Count; i++)
+                {
+                    Vertex a = _Triangles[i][0];
+                    Vertex b = _Triangles[i][1];
+                    Vertex c = _Triangles[i][2];
+
+                    Vector3 trinormal = Vector3.Normalize(Vector3.Cross(c.Position - a.Position, b.Position - a.Position));
+
+                    a.Normal += trinormal;
+                    b.Normal += trinormal;
+                    c.Normal += trinormal;
+                }
+
+                foreach (Vertex[] varr in _Triangles)
+                    foreach (Vertex v in varr)
+                        v.Normal.Normalize();
+                // Foreach triangle
+                    // Get tri normal
+                    // Foreach vertex in tri
+                        // Add tri normal to vertex normal
+                // Foreach vertex
+                    // Normalize normal
             }
 
             int vertexcount = _Triangles.Count * 3;
@@ -109,7 +142,38 @@ namespace L2D.Engine
             int id = 0;
 			GL.GenBuffers( 1, out id );
             GL.BindBuffer(BufferTarget.ArrayBuffer, id);
-            GL.BufferData(BufferTarget.ArrayBuffer, new IntPtr(Vertex.Size * vertexcount), vertices, BufferUsageHint.StaticDraw);
+
+            GL.BufferData(BufferTarget.ArrayBuffer, new IntPtr(Vertex.Size * vertexcount), IntPtr.Zero, BufferUsageHint.StaticDraw);
+            IntPtr buffer = GL.MapBuffer(BufferTarget.ArrayBuffer, BufferAccess.WriteOnly);
+            byte* pBuffer = (byte*)buffer.ToPointer();
+            for (int t = 0; t < vertices.Length; t++)
+            {
+                Vertex vertex = vertices[t];
+                float* pVertex = (float*)(pBuffer + (t * Vertex.Size));
+
+                pVertex[0] = vertex.UV.X;
+                pVertex[1] = vertex.UV.Y;
+
+                pVertex[2] = vertex.Color.R;
+                pVertex[3] = vertex.Color.G;
+                pVertex[4] = vertex.Color.B;
+                pVertex[5] = vertex.Color.A;
+
+                pVertex[6] = vertex.Normal.X;
+                pVertex[7] = vertex.Normal.Y;
+                pVertex[8] = vertex.Normal.Z;
+
+                pVertex[9] = vertex.Position.X;
+                pVertex[10] = vertex.Position.Y;
+                pVertex[11] = vertex.Position.Z;
+            }
+
+            GL.UnmapBuffer(BufferTarget.ArrayBuffer);
+            
+            _Normals = null;
+            _Points = null;
+            _TextureCords = null;
+            _Triangles = null;
 
             return new int[2]
             {
@@ -183,7 +247,7 @@ namespace L2D.Engine
                     }
                 }
 
-                tr_all[face] = new Vertex(point.X, point.Y, point.Z, 1, 1, 1, 1, uv.X, uv.Y);
+                tr_all[face] = new Vertex(point, Color4.White, uv, normal);
             }
 
             Vertex[] tr = new Vertex[3];

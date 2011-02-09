@@ -11,28 +11,26 @@ namespace L2D.Engine
 {
     public struct Vertex
     {
-        static public int Size = 72; // sizeof(double) * no. of elements (total size of all elements)
-        public Vertex(double X, double Y, double Z, double R, double G, double B, double A, double UVX, double UVY)
+        public const int Size = sizeof(float) * (3 + 4 + 2 + 3);
+        public Vertex(Vector3d Position, Color4 Color, Vector2d UV, Vector3d Normal)
         {
-            this.X = X;
-            this.Y = Y;
-            this.Z = Z;
-            this.R = R;
-            this.G = G;
-            this.B = B;
-            this.A = A;
-            this.UVX = UVX;
-            this.UVY = UVY;
+            this.Position = new Vector3((float)Position.X, 
+                (float)Position.Y, 
+                (float)Position.Z);
+            
+            this.Color = Color;
+
+            this.UV = new Vector2((float)UV.X,
+                (float)UV.Y);
+
+            this.Normal = new Vector3((float)Normal.X, 
+                (float)Normal.Y, 
+                (float)Normal.Z);
         }
-        double X;
-        double Y;
-        double Z;
-        double R;
-        double G;
-        double B;
-        double A;
-        double UVX;
-        double UVY;
+        public Vector3 Position;
+        public Color4 Color;
+        public Vector2 UV;
+        public Vector3 Normal;
     }
 
 
@@ -79,10 +77,8 @@ namespace L2D.Engine
                 {
                     GL.BindBuffer(BufferTarget.ArrayBuffer, this.VBOID);
 
-                    GL.VertexPointer(3, VertexPointerType.Double, sizeof(double) * 9, 0);
-                    GL.ColorPointer(4, ColorPointerType.Double, sizeof(double) * 9, sizeof(double) * 3);
-                    GL.TexCoordPointer(2, TexCoordPointerType.Double, sizeof(double) * 9, sizeof(double) * 7);
-
+                    GL.InterleavedArrays(InterleavedArrayFormat.T2fC4fN3fV3f, 0, IntPtr.Zero);
+                    
                     GL.DrawArrays(BeginMode.Triangles, 0, this.Vertices);
                 }
             }
