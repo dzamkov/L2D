@@ -97,9 +97,7 @@ namespace L2D.Engine
                 }
             }
 
-            this._LightingShader.SetUniform("SunDirection", this._Sun.Sun.Direction);
-            this._LightingShader.SetUniform("Diffuse", 0.5f);
-            this._LightingShader.SetUniform("Ambient", 0.5f);
+            
 
             GL.Enable(EnableCap.DepthTest);
 
@@ -113,21 +111,24 @@ namespace L2D.Engine
             GL.MultMatrix(ref view);// not depricated
 
             this._LightingShader.Call();
-            DrawModels();
+            this._LightingShader.SetUniform("SunDirection", this._Sun.Sun.Direction);
+            this._LightingShader.SetUniform("Diffuse", 0.5f);
+            this._LightingShader.SetUniform("Ambient", 0.5f);
+
+            DrawModels(this._LightingShader);
 
             // End hdr
             if (this._HDR != null)
             {
                 this._HDR.End(0);
             }
-
             Shader.Dismiss();
 #endif
 
             
         }
 
-        private void DrawModels()
+        private void DrawModels(Shader LightShader)
         {
             LinkedListNode<ModelComponent> node = this._Models.First;
             
@@ -139,7 +140,9 @@ namespace L2D.Engine
                 if (m.Removed)
                     this._Models.Remove(node);
                 else
-                    m.Render();
+                {
+                    m.Render(LightShader);
+                }
                 
                 node = nextnode;
             }

@@ -26,13 +26,15 @@ namespace L2D
 
             this.VSync = VSyncMode.Off;
 
-            GL.Enable(EnableCap.ColorMaterial);
+            //GL.Enable(EnableCap.ColorArray);
             GL.Enable(EnableCap.VertexArray);
-            //GL.Enable(EnableCap.NormalArray);
+            GL.Enable(EnableCap.NormalArray);
+            GL.Enable(EnableCap.Texture2D);
             GL.Enable(EnableCap.TextureCoordArray);
 			
 			
             GL.Enable(EnableCap.CullFace);
+            GL.Enable(EnableCap.DepthTest);
             //GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
 
             this.WindowState = WindowState.Maximized;

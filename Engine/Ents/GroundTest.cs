@@ -28,7 +28,10 @@ namespace L2D.Engine
             body.Position = new Vector(0.0, 0.0, 0.0);
             this._Phys = new PhysicsComponent(body);
             this._Phys.Scale = new Vector(Size.X, Size.Y, 1.0);
-            this._Duck = new ModelComponent(Model.LoadFile(res["Models"]["cube.obj"].PathString), this._Phys);
+
+            Texture txt = Texture.Load(res["Textures"]["texture.bmp"]);
+
+            this._Duck = new ModelComponent(Model.LoadFile(res, "cube.obj"), this._Phys, txt);
             this._Duck.Model.Color = Color.RGB(1.0, 1.0, 1.0);
         }
 

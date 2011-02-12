@@ -41,14 +41,14 @@ namespace L2D.Engine
             this.Color = Color.RGB(1.0, 1.0, 1.0);
         }
 
-        public static Model LoadFile(string filename)
+        public static Model LoadFile(Path path, string filename)
         {
             string ext = System.IO.Path.GetExtension(filename).ToLower();
             
             int[] precache;
 
             if (ext == ".obj")
-                precache = OBJ.Load(filename);
+                precache = OBJ.Load(path["Models"][filename]);
             else
                 throw new NotImplementedException("Model format not implented");
 
@@ -57,7 +57,6 @@ namespace L2D.Engine
             mdl.VBOID = precache[0];
             Console.WriteLine("VBOID ONLINE...");
             mdl.Vertices = precache[1];
-
             return mdl;
         }
 
@@ -69,16 +68,14 @@ namespace L2D.Engine
 
             GL.PushMatrix();
             {
-                GL.Color4(this.Color);
+                //GL.Color4(this.Color);
                 
 				GL.Translate(Pos);
 				GL.MultMatrix(ref Ang);
 				GL.Scale(Scale);
                 {
                     GL.BindBuffer(BufferTarget.ArrayBuffer, this.VBOID);
-
                     GL.InterleavedArrays(InterleavedArrayFormat.T2fC4fN3fV3f, 0, IntPtr.Zero);
-                    
                     GL.DrawArrays(BeginMode.Triangles, 0, this.Vertices);
                 }
             }

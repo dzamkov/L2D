@@ -1,7 +1,8 @@
-
 uniform vec3 SunDirection;
 uniform float Diffuse;
 uniform float Ambient;
+
+uniform sampler2D Material;
 
 varying vec3 Normal;
 
@@ -16,7 +17,10 @@ void main()
 #ifdef _FRAGMENT_
 void main()
 {
-	vec3 diffuse = vec3(2.0, 2.0, 2.0);
+	vec2 uv = gl_TexCoord[0];
+	vec4 col = texture2D(Material, uv);
+	
+	vec3 diffuse = col.rgb;
 	float light = dot(Normal, SunDirection) + 0.5;
 	gl_FragColor = vec4(diffuse * light, 1.0);
 }

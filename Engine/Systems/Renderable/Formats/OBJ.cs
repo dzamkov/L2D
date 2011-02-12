@@ -86,7 +86,10 @@ namespace L2D.Engine
 
             while (!str.EndOfStream)
             {
-                string[] split_line = str.ReadLine().Trim().Split(" ".ToCharArray());
+                string[] split_line = str.ReadLine().Trim().Split(" ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+
+                if (split_line.Length == 0) continue;
+                
                 string opcode = split_line[0];
 
                 TDele dele;
